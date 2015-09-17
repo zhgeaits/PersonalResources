@@ -1,0 +1,133 @@
+Select * From dept
+Select * From emp
+Select * From salgrade
+--1、显示所有部门名
+Select dname From dept
+--2、显示所有雇员名及其全年收入(工资+补助)，并指定列别名“年收入”
+Select ename,sal+nvl(comm,0) 年收入 From emp
+--3、显示存在雇员的所有部门号
+Select Distinct deptno From emp
+--4、显示工资超过2850的雇员名和工资
+Select ename,sal From emp Where sal>2850
+--5、显示工资不在1500到2850之间的所有雇员名及工资
+Select ename,sal From emp Where sal Not Between 1500 And 2850
+--6、显示雇员代码为7566的雇员名及所在部门号
+Select ename,deptno From emp Where empno=7566
+--7、显示部门代码为10和30中工资超过1500的雇员名及工资
+Select ename,sal From emp Where sal>1500 And deptno In(10,30)
+--8、显示无管理者的雇员名及岗位
+Select ename,job From emp Where mgr Is Null
+--9、显示所有雇员的平均工资、总计工资、最高工资、最低工资
+Select Avg(sal),Sum(sal),Max(sal),Min(sal) From emp
+--10、显示每种岗位的雇员总数、平均工资
+Select job,Count(*),Avg(sal) From emp Group By job
+--11、显示雇员总数，以及获得补助的雇员数
+Select Count(*),Count(comm) From emp 
+--12、显示管理者的总人数
+Select Count(Distinct mgr) From emp
+--13、显示雇员工资的最大差额
+Select Max(sal)-Min(sal) From emp
+--14、显示部门代码为20的部门号，以及该部门的所有雇员名、雇员工资及岗位
+Select ename,sal,job From emp Where deptno=20
+--15、显示获得补助的所有雇员名、补助额以及所在部门号
+Select ename,comm,deptno From emp Where comm Is Not Null
+--16、显示所有雇员的姓名、部门编号、工资，并且列名要显示为中文
+Select ename 员工姓名,deptno 部门编号,sal 工资 From emp
+--17、显示工资大于1500的雇员名和工资，并且按照工资的降序排列
+Select ename,sal From emp Where sal>1500 Order By sal Desc
+--18、显示雇员部门编号为10或20的信息（要求使用IN关键字）
+Select * From emp Where deptno In(10,20)
+--19、显示雇员名的第二个字母为A的信息
+Select * From emp Where ename Like '_A%'
+--20、显示没有发放补助的雇员信息
+Select * From emp Where comm Is Null
+--21、显示雇员表中记录总数
+Select Count(*) From emp
+--22 显示所有雇员名、雇员工资及所在部门名
+Select ename,sal,dname From emp,dept Where emp.deptno=dept.deptno 
+--23 显示部门代码为20的部门名，以及该部门的所有雇员名、雇员工资及岗位
+Select dname,ename,sal,job From emp,dept Where emp.deptno=dept.deptno And dept.deptno=20
+
+--24	显示所有雇员名、雇员工资及工资级别
+Select ename,sal,grade From emp,salgrade Where sal>=losal And sal<=hisal
+--25	显示雇员"SCOTT"的管理者名
+Select b.ename From emp a,emp b Where a.mgr=b.empno And a.ename='SCOTT'
+--26	显示获得补助的所有雇员名、补助额以及所在部门名
+Select ename,comm,dname From emp,dept Where emp.deptno=dept.deptno And comm Is Not Null
+--27	查询EMP表和SALGRADE表，显示部门代码为20的雇员名、工资及其工资级别
+Select ename,sal,grade From emp,salgrade Where sal>=losal And sal<=hisal And emp.deptno=20 
+--28	显示部门代码为10的所有雇员名、部门名，以及其他部门名
+select e.ename,d.dname
+from dept d,emp e
+where d.deptno = e.deptno(+)
+  and e.deptno(+) = 10 
+--29	显示部门代码为10的所有雇员名、部门名，以及其他雇员名
+Select ename,dname From emp,dept Where emp.deptno=dept.deptno(+) and dept.deptno(+)=10
+--30	显示部门代码为10的所有雇员名、部门名，以及其他部门名和雇员名
+Select ename,dname From emp Full Outer Join dept On emp.deptno=dept.deptno And deptno=10
+--31 查询出人数最多的那个部门的部门编号和部门名称
+select d.deptno,d.dname
+from dept d,emp e
+where d.deptno = e.deptno
+group by d.deptno,d.dname
+having count(*) >= all (select count(*)
+                        from emp
+                        group by deptno)
+--32显示"BLAKE"同部门的所有雇员，但不显示"BLAKE"
+Select * From emp Where job=(Select job From emp Where ename='BLAKE') And ename!='BLAKE'
+--33 按以下格式显示下面的信息，条件是工资大于1500的。
+--  部门名称  姓名  工资
+Select dname,ename,sal From emp,dept Where emp.deptno=dept.deptno And sal>1500
+--34 按以下格式显示下面信息，条件是此人工资在所有人中最高。
+--  部门  姓名  工资
+Select dname,ename,sal From emp,dept Where emp.deptno=dept.deptno And sal=(Select max(sal) From emp)
+--35 按以下格式显示下面信息
+--  某人 为 某人 工作
+Select e.ename||'为'||m.ename||'工作'From emp e,emp m Where e.mgr=m.empno
+--36 为所有人长工资，标准是：10部门长10%；20部门长15%；
+--   30部门长20%其他部门长18%（要求用DECODE函数）
+select ename,deptno,sal,sal+sal*(decode(deptno,10,0.1,20,0.15,30,0.2,0.18)) as newsal
+from emp
+--37
+--根据工作年限长工资，标准是：为公司工作了几个月就长几个百分点。
+select ename,hiredate,sal,sal+sal*(round(months_between(sysdate,hiredate)/100)) as newsal
+from emp
+--38 查询出king所在部门的部门号\部门名称\部门人数
+--ex1
+Select d.deptno,d.dname,Count(*) From dept d,emp e,emp m 
+Where d.deptno=e.deptno And e.deptno=m.deptno And e.ename='KING'
+Group By d.deptno,d.dname
+--ex2
+Select emp.deptno,dname,Count(*) From emp,dept 
+Where emp.deptno=dept.deptno 
+And emp.deptno=(Select deptno From emp Where ename='KING') 
+Group By emp.deptno,dname
+--39 查询出工资成本最高的部门的部门号和部门名称
+Select d.deptno,d.dname From dept d,emp e 
+Where d.deptno=e.deptno Group By d.deptno,d.dname Having Sum(e.sal)>=All(Select Sum(sal) From emp Group By deptno)
+--40 查询出工资不超过2500的人数最多的部门名称
+select d.deptno,d.dname
+from dept d,emp e
+where d.deptno = e.deptno
+    and e.sal <= 2500
+group by d.deptno,d.dname
+having count(*) >= all (select count(*)
+                        from emp
+                        where sal <= 2500
+                        group by deptno)
+
+
+
+
+      
+
+
+
+
+
+
+
+
+
+
+

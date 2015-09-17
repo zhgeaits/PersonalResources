@@ -1,0 +1,117 @@
+
+--1)查询表student的学号，姓名，班级，把年龄+1岁新列名为‘现在年龄’。
+select sid,sname ,age+1 as 现在年龄 from student
+
+--2查询学号在3到6之间的学生的学号，姓名，JAVA成绩, 按学号降序排。
+select student.sid,student.sname,grade.sgrade ,grade.Type
+from student,grade 
+where student.sid=grade.sid and student.sid between 3 and 6 
+and type='java'order by student.sid desc
+	
+--3)查询男生基本信息按学号降序排
+select * from student where sex='男'order by sid Desc
+
+--4)查询学号为1的同学所学的课程和讲课教师
+select lession.type, lession.teacher from lession,student
+where lession.sclass=student.sclass 
+and student.sid=1 
+
+--5)查询姓名为张三的学生的课程名，老师 ，成绩(两种方法)
+select l.type, l.teacher ,g.sgrade,s.sname 
+from lession l,grade g,student s
+where l.type=g.type 
+and l.sclass=s.sclass
+and s.sid=g.sid
+and s.sname='张三'
+
+Select l.type,l.teacher,g.sgrade From lession l Inner Join grade g
+On l.Type = g.Type Inner Join student s On l.sclass=s.sclass And s.sid=g.sid
+Where s.sname='张三'
+
+
+
+--6)查询student表有多少条数据
+select count(*) from student
+
+select * from grade
+
+--7）查询1号同学的姓名和总成绩（两种方法）
+select sname,sum(sgrade) as 总成绩 from student join grade 
+on student.sid=grade.sid where student.sid=1 group by sname
+ 
+--8）查询一班学生的学号，姓名，总成绩
+select student.sid ,student.sname, sum(sgrade)
+from student,grade
+where student.sid=grade.sid
+and student.sclass='一班'
+ group by student.sid ,student.sname
+
+--9)查询平均分大于85，总分大于170的学生学号，姓名，班级
+select student.sid,student.sname,avg(sgrade),sum(sgrade),student.sclass
+from student,grade
+where student.sid=grade.sid
+group by student.sid,student.sname,student.sclass
+having avg(sgrade)>85 and sum(sgrade)>170 
+
+
+
+--查询张三的同班同学的信息
+select * from student 
+where sclass =
+	( select sclass 
+	  from student 
+	  where sname='张三'
+        ) 
+and sname!='张三' 
+
+
+
+--查询总成绩比张三总成绩高的学生的学号，姓名，总成绩
+select  s1.sid,s1.sname,sum(sgrade) as 总成绩
+from student  s1,grade g1
+where s1.sid=g1.sid
+group by s1.sid,s1.sname
+having sum(sgrade)>
+	(select sum(sgrade) 
+	  from student  s2 ,grade g2 
+	  where s2.sid=g2.sid 
+	   and s2.sname='张三')
+
+--6）查询一班总成绩最高的总成绩
+select max(sumgrade) maxsumgrade
+from
+	(select sum(g.sgrade) sumgrade
+	  from student s,grade g  
+	  where s.sid=g.sid
+	  and s.sclass='一班'
+	  group by s.sid
+	)a
+
+--查询一班总成绩最高的同学的学号，姓名，总成绩
+select s.sid,s.sname,sum(g.sgrade),s.sclass
+from student s,grade g
+where s.sid=g.sid
+group by s.sid,s.sname,s.sclass
+having sum(g.sgrade)>=All(
+select sum(g1.sgrade)
+	  from student s1,grade g1  
+	  where s1.sid=g1.sid
+	  and s1.sclass='一班'
+	  group by s1.sid
+	) 
+--查询java成绩最高的学生的学号，姓名，课程
+select student.sid,student.sname,grade.type from student ,grade 
+where student.sid=grade.sid 
+and grade.type='java'
+and grade.sgrade=
+(select max(sgrade) 
+from grade
+)
+--14)查询总成绩比3号同学总成绩高的人的姓名
+select student.sname ,sum(sgrade) from student ,grade where student.sid=grade.sid
+group by student.sname 
+having sum(sgrade)>(select sum(sgrade) from grade where sid=3)
+
+
+
+

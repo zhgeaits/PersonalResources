@@ -1,0 +1,103 @@
+create table student
+(
+sid number primary key,
+sname varchar2(50),
+sex varchar2(2),
+age number,
+tel varchar2(50),
+sclass varchar2(10)
+)
+
+创建学生表
+学生ID（SID），学生姓名（SNAME），学生性别（SEX），学生年龄（AGE），学生班级（SCLASS）
+
+insert into student values(1,'张三','男',20,'1380000000','一班');
+insert into student values(2,'李四','女',19,'1381111111','一班');
+insert into student values(3,'王五','男',18,'1382233444','一班');
+insert into student values(4,'周六','男',21,'1372223444','一班');
+insert into student values(5,'冯七','男',22,'1382299999','二班');
+insert into student values(6,'马八','女',18,'1382233444','二班');
+insert into student values(7,'张学友','男',18,'1382233654','一班');
+insert into student values(8,'刘德华','男',19,'1382233364','二班');
+insert into student values(9,'郭富城','男',18,'1382233574','一班');
+insert into student values(10,'黎明','男',18,'13822334664','一班');
+insert into student values(11,'周杰沦','男',19,'1382233476','二班');
+insert into student values(12,'蔡依林','女',18,'1382233444','二班');
+insert into student values(13,'宋江','男',18,'1382233444','一班');
+insert into student values(14,'林冲','男',21,'1372223444','一班');
+insert into student values(15,'李奎','男',22,'1382299999','二班');
+insert into student values(16,'刘备','女',18,'1382233944','一班');
+insert into student values(17,'关羽','男',18,'1392233444','一班');
+insert into student values(18,'张非','女',20,'1372233444','二班');
+insert into student values(19,'赵云','男',18,'1362233445','一班');
+insert into student values(20,'大乔','女',20,'1382233465','二班');
+insert into student values(21,'小乔','女',18,'1382233487','二班');
+
+创建课程表
+课程ID（LID），班级（SCLASS），课程类型（TYPE），教师（TEACHER）
+create table lession
+(
+lid number primary key,
+sclass varchar2(10),
+type varchar2(50),
+teacher varchar2(50)
+)
+
+insert into lession values(1,'一班','java','夏昕');
+insert into lession values(2,'一班','日语','酒井法子');
+insert into lession values(3,'二班','java','孙卫琴');
+insert into lession values(4,'二班','日语','酒井法子');
+
+
+create table grade
+(
+gid number primary key,
+sid number,
+type varchar(50),
+sgrade float
+)
+创建成绩表
+成绩ID（GID），学生ID（SID），科目类型（TYPE），成绩（SGRADE）
+
+insert into grade values(1,'1','java',95);
+insert into grade values(2,'1','日语',98);
+insert into grade values(3,'2','java',85);
+insert into grade values(4,'2','日语',72);
+insert into grade values(5,'3','java',88);
+insert into grade values(6,'3','日语',98);
+insert into grade values(7,'4','java',72);
+insert into grade values(8,'4','日语',88);
+insert into grade values(9,'5','java',96);
+insert into grade values(10,'5','日语',96);
+insert into grade values(11,'6','java',72);
+insert into grade values(12,'6','日语',85);
+insert into grade values(13,'7','java',99);
+insert into grade values(14,'7','日语',98);
+insert into grade values(15,'8','java',85);
+insert into grade values(16,'8','日语',58);
+insert into grade values(17,'9','java',77);
+insert into grade values(18,'9','日语',65);
+insert into grade values(19,'10','java',72);
+insert into grade values(20,'10','日语',78);
+insert into grade values(21,'11','java',85);
+insert into grade values(22,'11','日语',99);
+insert into grade values(23,'12','java',80);
+insert into grade values(24,'12','日语',70);
+insert into grade values(25,'13','java',82);
+insert into grade values(26,'13','日语',91);
+insert into grade values(27,'14','java',72);
+insert into grade values(28,'14','日语',58);
+insert into grade values(29,'15','java',76);
+insert into grade values(30,'15','日语',86);
+insert into grade values(31,'16','java',92);
+insert into grade values(32,'16','日语',65);
+insert into grade values(33,'17','java',75);
+insert into grade values(34,'17','日语',88);
+insert into grade values(35,'18','java',85);
+insert into grade values(36,'18','日语',82);
+insert into grade values(37,'19','java',98);
+insert into grade values(38,'19','日语',98);
+insert into grade values(39,'20','java',72);
+insert into grade values(40,'20','日语',88);
+insert into grade values(41,'21','java',92);
+insert into grade values(42,'21','日语',68);
