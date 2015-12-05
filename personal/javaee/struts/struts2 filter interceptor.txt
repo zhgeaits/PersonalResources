@@ -1,0 +1,8 @@
+welcomefile = index.jsp
+
+1.如果配置了过滤器过滤如下的url*.action、*.jsp则struts2的过滤器会放行(直接访问项目http://127.0.0.1:8081/teststruts)，容器直接在项目根目录下查询index.jsp，
+找不到会直接显示目录？如果index.jsp使用了struts2的tags就不能正常显示了，因为tags必须经过struts2的过滤器？但是如果直接这样访问呢？http://127.0.0.1:8081/teststruts/index.jsp
+
+2.如果配置了/*、*则struts2会过滤掉项目根目录的访问，即http://127.0.0.1:8081/teststruts不会放行，因为struts.action.extension=action,,（注意两个逗号）是默认的后缀名，因此过滤得到“”空的action名字，于是查询action配置，查询不到就报错了。如果直接访问http://127.0.0.1:8081/teststruts/index.jsp，就可以正常显示，就算配置了tags也是正常的。这是已经经过了struts2的过滤器了，然后解析index.jsp，后缀名为jsp，不在action和“”空之中，于是不去查找action，而是直接访问jsp文件（jsp本质是servlet）,拦截器处理了tags。
+
+3.如果配置了/*、*并且struts.action.extension=action,则依然过滤访问项目根目录，解析得到的后缀名为“”不在extension之中，于是不做处理，然后访问welcomefile，同2一样来解析index.jsp。
